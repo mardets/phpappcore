@@ -68,16 +68,16 @@
 
 		 ini_set('SMTP', "smtp.gmail.com");
 		 ini_set('smtp_port', "587");
-		 ini_set('sendmail_from', "slhenny30@gmail.com");  
+		 ini_set('sendmail_from', "youremail@gmail.com");  
 			ini_set('display_errors', 'On');
          $headers = array(
 				'MIME-Version' => '1.0',
 				'Content-type' => 'text/html; charset=iso-8859-1',
-    			'From' => "slhenny30@gmail.com",
-    			'Reply-To' => "slhenny30@gmail.com"
+    			'From' => "youremail@gmail.com",
+    			'Reply-To' => "youremail@gmail.com"
 			);
 			
-			$subject = 'Bienvenue sur Together!';
+			$subject = 'Bienvenue sur appname!';
 			
 			$message = '
 				<html>
