@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Bienvenue sur votre Dashboard</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="../distribution-premium/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="../distribution-premium/vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Fontastic Custom icon font-->
+    <link rel="stylesheet" href="../distribution-premiumcss/fontastic.css">
+    <!-- Google fonts - Poppins -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="../distribution-premium/css/style.default.premium.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="../distribution-premium/css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <?php 
+  
+	require("../appcore/config/dbconfig.php");
+	require("../appcore/config/storage.php");
+	require("../appcore/config/i18n.php");
+	require("../appcore/auth/auth.php");
+    	require("../appcore/controller/controller.php");
+    	require("../src/util/util.php");
+	require('../src/controller/auth.php');
+	require('dashboard-data.php');
+	
+	$lang = Util::evalUrl($_SERVER['REQUEST_URI']);
+	
+	$lang_fr = '&lang=fr';
+	$lang_en = '&lang=en';
+	$req_uri = $_SERVER['REQUEST_URI'];
+	$french = "$req_uri$lang_fr";
+	$eng = "$req_uri$lang_en";
+
+	
+	$param = substr(strstr($req_uri, '?'), 6); 
+	$data = DashboardData::queries($param);
+	Storage::setItem('data', $data);
+	$profile = $data['profile'];
+	//print_r($data['profile']['role_name']);
+	$username = $data['profile']['username'];
+	$firstname = $profile['firstname'];
+	$lastname = $profile['lastname'];
+	$fullname = "$firstname $lastname";
+	
+	$profiles = $data['profiles'];
+	
+	if($profile['role_name'] == 'user') {
+		header('Location: dashboard-client.php');
+	   exit;	
+	}
+  
+  ?>
+  <body>
+    <div class="page">
+      <!-- Main Navbar-->
+      <header class="header">
+        <nav class="navbar">
+          <!-- Search Box-->
+          <div class="search-box">
+            <button class="dismiss"><i class="icon-close"></i></button>
+            <form id="searchForm" action="#" role="search">
+              <input type="search" placeholder="What are you looking for..." class="form-control">
+            </form>
+          </div>
+          <div class="container-fluid">
+            <div class="navbar-holder d-flex align-items-center justify-content-between">
+              <!-- Navbar Header-->
+              <div class="navbar-header">
+                <!-- Navbar Brand --><a href="index.html" class="navbar-brand d-none d-sm-inline-block">
+                  <div class="brand-text d-none d-lg-inline-block"><span>Together </span><strong> By Dalepro</strong></div>
+                  <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>BD</strong></div></a>
+                <!-- Toggle Button--><a id="toggle-btn" href="#" class="menu-btn active"><span></span><span></span><span></span></a>
+              </div>
+              <!-- Navbar Menu -->
+              <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+                <!-- Search-->
+                <li class="nav-item d-flex align-items-center"><a id="search" href="#"><i class="icon-search"></i></a></li>
+            
+                <!-- Languages dropdown    -->
+                <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link language dropdown-toggle"><img id="img-lang" src="../distribution-premium/img/flags/16/GB.png" alt="English"><span id="lang-text" class="d-none d-sm-inline-block">English</span></a>
+                  <ul aria-labelledby="languages" class="dropdown-menu">
+                    <li><a rel="nofollow" href=<?php echo "dashboard.php?user=$username&lang=en" ?> class="dropdown-item" onclick="setLanguage(this)"> <img src="../distribution-premium/img/flags/16/GB.png" alt="English" class="mr-2"><?php echo $lang['nav']['english']?></a></li>
+                    <li><a rel="nofollow" href=<?php echo "dashboard.php?user=$username&lang=fr" ?> class="dropdown-item"  onclick="setLanguage(this)"> <img src="../distribution-premium/img/flags/16/FR.png" alt="English" class="mr-2"><?php echo $lang['nav']['french']?>                                         </a></li>
+                  </ul>
+                </li>
+                <!-- Logout    -->
+                <li class="nav-item"><a href="logout.php" class="nav-link logout"> <span class="d-none d-sm-inline"><?php echo $lang['nav']['logout']?></span><i class="fa fa-sign-out"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="page-content d-flex align-items-stretch"> 
+        <!-- Side Navbar -->
+        <nav class="side-navbar">
+          <!-- Sidebar Header-->
+          <div class="sidebar-header d-flex align-items-center"><a href="pages-profile.html">
+              <div class="avatar"><img src="img/avatar-1.jpg" alt="..." class="img-fluid rounded-circle"></div></a>
+            <div class="title">
+              <h1 class="h4"><?php echo $fullname ?></h1>
+            </div>
+          </div>
+          <!-- Sidebar Navidation Menus--><span class="heading"></span>
+          <ul class="list-unstyled">
+            <li class="active"><a href=<?php echo "dashboard.php?user=$username" ?>> <i class="icon-home"></i><?php echo $lang['sidebar']['dashboard']?> </a></li>
+            <li><a href="#aboDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-grid"></i><?php echo $lang['sidebar']['subscription']?> </a>
+              <ul id="aboDropdown" class="collapse list-unstyled ">
+                <li><a href=<?php echo "subscription/new.php?user=$username" ?>><?php echo $lang['sidebar']['new']?></a></li>
+                <li><a href=<?php echo "subscription/list.php?user=$username" ?>><?php echo $lang['sidebar']['list']?></a></li>
+              </ul>
+            </li>
+	    <li><a href="#accountDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-grid"></i><?php echo $lang['sidebar']['withdrawal']?> </a>
+              <ul id="accountDropdown" class="collapse list-unstyled ">
+                <li><a href=<?php echo "withdrawal/list-pending.php?user=$username" ?>><?php echo $lang['sidebar']['new']?></a></li>
+                <li><a href=<?php echo "withdrawal/list.php?user=$username" ?>><?php echo $lang['sidebar']['list']?></a></li>
+              </ul>
+            </li>
+	    <li><a href=<?php echo "profile/settings.php?user=$username" ?>> <i class="icon-home"></i><?php echo $lang['sidebar']['settings']?> </a></li>
+        </nav>
+        <div class="content-inner">
+          <!-- Page Header-->
+          <header class="page-header">
+            <div class="container-fluid">
+              <h2 class="no-margin-bottom">Dashboard</h2>
+            </div>
+          </header>
+          <!-- Dashboard Counts Section-->
+          <section class="dashboard-counts no-padding-bottom">
+            <div class="container-fluid">
+              <div class="row bg-white has-shadow">
+                <!-- Item -->
+                <div class="col-xl-3 col-sm-6">
+                  <div class="item d-flex align-items-center">
+                    <div class="icon bg-violet"><i class="icon-user"></i></div>
+                    <div class="title"><span><?php echo $lang['sidebar']['new']?><br>Clients</span>
+                      <div class="progress">
+                        <div role="progressbar" style="width: 25%; height: 4px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-violet"></div>
+                      </div>
+                    </div>
+                    <div class="number"><strong>25</strong></div>
+                  </div>
+                </div>
+                <!-- Item -->
+                <div class="col-xl-3 col-sm-6">
+                  <div class="item d-flex align-items-center">
+                    <div class="icon bg-red"><i class="icon-padnote"></i></div>
+                    <div class="title"><span><?php echo $lang['sidebar']['new']?><br>Subscribers</span>
+                      <div class="progress">
+                        <div role="progressbar" style="width: 70%; height: 4px;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-red"></div>
+                      </div>
+                    </div>
+                    <div class="number"><strong>70</strong></div>
+                  </div>
+                </div>
+                <!-- Item -->
+                <div class="col-xl-3 col-sm-6">
+                  <div class="item d-flex align-items-center">
+                    <div class="icon bg-green"><i class="icon-bill"></i></div>
+                    <div class="title"><span>Indirect<br>Relations</span>
+                      <div class="progress">
+                        <div role="progressbar" style="width: 40%; height: 4px;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-green"></div>
+                      </div>
+                    </div>
+                    <div class="number"><strong>40</strong></div>
+                  </div>
+                </div>
+                <!-- Item -->
+                <div class="col-xl-3 col-sm-6">
+                  <div class="item d-flex align-items-center">
+                    <div class="icon bg-orange"><i class="icon-check"></i></div>
+                    <div class="title"><span>Pending<br>Withdrawals</span>
+                      <div class="progress">
+                        <div role="progressbar" style="width: 50%; height: 4px;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-orange"></div>
+                      </div>
+                    </div>
+                    <div class="number"><strong>50</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Dashboard Header Section    -->
+          <section class="dashboard-header">
+            <div class="container-fluid">
+              <div class="row">
+                <!-- Line Chart            -->
+                <div class="chart col-lg-8 col-12">
+                  <div class="line-chart bg-white d-flex align-items-center justify-content-center has-shadow">
+                    <canvas id="lineChart"></canvas>
+                  </div>
+                </div>
+                <div class="chart col-lg-4 col-12">
+                  <!-- Pie Chart   -->
+                  <div class="bar-chart has-shadow bg-white">
+                    <div class="title"><strong class="text-violet">95%</strong><br><small><?php echo $lang['dashboard']['withdrawal_status']?></small></div>
+                    <canvas id="pieChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+		  <section class="tables">   
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                      <h3 class="h4">Last Subscribers</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Username</th>
+			      <th>Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <?php foreach($profiles as $key=>$value): ?>
+                        	 <tr>
+                        	   <td><?php echo $value['0']; ?></td>
+                          		<td><a class="text-muted" href=<?php echo "profile/network.php?user=$username" ?>><?php echo $value['1']; ?></a></td>
+                          		<td><?php echo $value[2]; ?></td>
+                          		<td><?php echo $value[5]; ?></td>             
+                          		<td><?php echo $value[11]; ?></td>
+                        	</tr>
+                        	<?php endforeach; ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+	      </div>
+ 	    </div>
+	  </section>
+          
+          
+          <!-- Page Footer-->
+          <footer class="main-footer">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  <p>Your company &copy; 2017-2020</p>
+                </div>
+                <div class="col-sm-6 text-right">
+                  <p>Version 1.4.6</p>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- JavaScript files-->
+    <script src="../distribution-premium/vendor/jquery/jquery.min.js"></script>
+    <script src="../distribution-premium/vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="../distribution-premium/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../distribution-premium/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="../distribution-premium/vendor/chart.js/Chart.min.js"></script>
+    <script src="../distribution-premium/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../distribution-premium/js/charts-home.js"></script>
+    <script src="../distribution-premium/js/charts-custom.js"></script>
+    <!-- Main File-->
+    <script src="../distribution-premium/js/front.js"></script>
+    <script src="../assets/js/chart.js"></script>
+	
+  </body>
+</html>

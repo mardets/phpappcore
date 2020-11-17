@@ -1,0 +1,17 @@
+<?php
+
+     require("../src/controller/controller.php");
+     require("../src/util/util.php");
+
+     class DashboardController extends Controller {
+
+			public function dashboard($username) {
+				return $username === 'admin' 
+						? Controller::filter(Util::getDb(), 'profile_dashboard', 'admin') 
+						: Controller::filter(Util::getDb(), 'profile_dashboard', $username);
+				
+			}
+
+     }
+
+?>
