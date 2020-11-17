@@ -54,9 +54,7 @@
 		
 		public static function fread($filename) {
 			if(file_exists($filename)) {
-				$handle = fopen($filename, "r");
-				$content = fread($handle, filesize($filename));
-				fclose($handle);
+				$content = file_get_contents($filename);
 				return $content;
 			}
 		}

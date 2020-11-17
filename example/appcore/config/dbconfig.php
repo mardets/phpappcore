@@ -78,7 +78,7 @@
 
         
    				 $dbconfig->setDbserver(new mysqli( $dbconfig->getHostname(), $dbconfig->getUsername() ,$dbconfig->getPassword(),$dbconfig->getDbname(),$dbconfig->getPort()));
-          echo "Connexion reussi!!! </br>";
+          //echo "Connexion reussi!!! </br>";
    				if($server === false){
   			    	die("ERROR: Could not connect. " . $dbserver->connect_error);
   				}
