@@ -1,0 +1,34 @@
+<?php
+
+     require("Dbconfig.php");
+     require("controller.php");
+     require("util/util.php");
+
+     class SubscriptionController extends Controller {
+
+			public function list() {
+				//get db server
+				$db = Util::getDbServer();
+				
+				if($db->getConnection()) {
+					//list the data view
+					$this->find($db, 'profile_subscription');				
+				}
+			}
+			
+			public function update() {
+				//array of subscription from form
+				$p_body = array('firstname' => '', 'lastname' => '', 'city' => '');
+			}
+			
+			public function delete() {
+			
+			}
+			
+			public function findOne() {
+			
+			}
+
+     }
+
+?>

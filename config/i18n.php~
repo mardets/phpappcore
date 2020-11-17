@@ -1,0 +1,94 @@
+<?php
+
+	class i18n {
+	
+		
+		
+		public static function en() {
+			$en = array(
+				"sidebar" => array(
+					"dashboard" => "Dashboard",
+					"subscription" => "Subscription",
+					"new" => "New",
+					"list" => "List",
+					"settings" => "Settings",
+					"withdrawals" => "Withdrawals",
+				),
+				"dashboard" => array(
+					"clients" => "Clients",
+					"subscribers" => "Subscribers",					
+					"relations" => "Relations",
+					"pending" => "Pending",
+				),
+				"profile" => array(
+					"drop" => "Drop files here to upload.",
+					"uploader" => "Upload File",
+					"edit" => "Edit Profile",
+					"username" => "Username", 						
+					"email" => "Email",
+					"firstname" => "Firstname",
+					"firstname" => "Firstname",
+					"lastname" => "Lastname",
+					"select" => "Select",
+					"phone" => "Phone",
+					"address" => "Address",
+					"city" => "City",
+					"country" => "Country",
+					"signature" => "Signature",
+					"position" => "Positionnement",
+					"indrectrel" => "Indirect Relation",
+					"directrel" => "DirectRelation",
+					"subscribed" => "Subscribed",   
+ 					"create" => "Create",
+					"update" => "Update"
+				),
+				"table" => array(
+					"show" => "Show",
+					"entries" => "entries", 					
+					"search" => "Search",
+					"fullname" => "Fullname",
+					"email" => "Email",
+					"phone" => "Phone",
+					"address" => "Address",
+					"indrectrel" => "Indirect Relation",
+					"directrel" => "DirectRelation",
+ 					"showing" => "Create"
+				),
+				"nav" => array(
+					"english" => "English",
+					"french" => "French", 						
+					"logout" => "Logout"
+				),
+				"debit" => array(
+					"which" => "Which Amount ?",
+					"widrawalamount" => "Withdrawal Amount"
+				)						
+			);	
+			return $en;		
+		}
+		
+		public static function fr() {
+			$fr = array(
+				"sidebar" => array(
+					"dashboard" => "Dashboard",
+					"abonnement" => "Abonnements",
+					"settings" => "Paramètres",
+					"customers" => "Nouveaux Clients",
+					""	=> ""	
+				),
+				"main" => array(
+					"dashboard" => array(
+					
+					)		
+				)		
+			)	
+			return $fr;		
+		}
+	
+	
+	}
+	
+	
+
+
+?>

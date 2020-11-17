@@ -1,0 +1,102 @@
+<?php
+     
+
+     //require("../config/dbconfig.php");
+     //require("../src/auth/auth.php");
+     //require("../src/controller/controller.php");
+     //require("../src/util/util.php");
+
+    class AuthController extends Controller {
+
+		   public static function login() {
+		   	$db = Util::getDb();
+			$dbserver = $db->getDbserver();
+			$username = $dbserver->real_escape_string($_POST['username']);
+          	$password = $dbserver->real_escape_string($_POST['password']);
+
+          	Auth::login($db, 'user', $username, $password);
+			
+			$data = Controller::filter($db, 'profile_dashboard', $username);
+			return $data;
+          }
+
+
+		   function register() {
+				$db = Util::getDb();
+				
+								
+				if($db) {
+					//array of profile from form
+					$len = Controller::rowCount($db->getDbserver(), 'profile');
+					
+					echo "LA TAILLE DE LA TABLE"; var_dump($len);
+					$isign = '';
+					$username = Auth::generateStringCode();
+					$password = Auth::generateStringCode();
+					$fname = $_POST['firstname'];
+					$lname = $_POST['lastname'];					
+					$fullname =  "$fname $lname";
+					
+					
+					//array of user from form
+					$date_user = new DateTime();
+					$u_body = array('username' => $username, 'email' => $_POST['email'],
+					 'password' => $password, 'token' => '', 'roleid' => 2,
+					 'created' => $date_user->format('Y-m-d H:i:s'), 'edited' => $date_user->format('Y-m-d H:i:s'));	
+					
+					//register the user
+					Controller::save($db, 'user', $u_body);
+					
+					$date_profile = new DateTime();
+					$p_body = array('proid' => md5($fullname), 'firstname' => $_POST['firstname'], 'lastname' => $_POST['lastname'],
+					'fullname' => $fullname , 'gender' => $_POST['gender'], 'userid' => $username, 'phone' => 0000000000,
+					'city' => $_POST['city'], 'country' => $_POST['country'], 'imgUrl' => '',
+					'location' => '', 'created' => $date_profile->format('Y-m-d H:i:s'),
+					 'edited' => $date_profile->format('Y-m-d H:i:s'));
+					 
+					//verify if the send mail handle
+					//Auth::sendMail($_POST['email'], $username, $password);	
+					 
+				 
+					//insert the profile
+					Controller::save($db, 'profile', $p_body);
+				
+					//search the parents (direct and indirect) username
+
+					if($_POST['iparent'] !== '') {
+						$iProfile = Controller::findOne($db->getDbserver(), 'profile', 'fullname', $_POST['iparent']);	
+						$isign = $iProfile['userid'];
+					} else {
+						$dProfile = Controller::findOne($db->getDbserver(), 'profile', 'fullname', $_POST['dparent']);
+					}
+					
+				
+					//insert the node
+					$relations = array('id' => $p_body['proid'], 'fullname' => $fullname, 'imgUrl' => '');	
+					$date_usernode = new DateTime();
+
+					$node_body = array('nid' => md5($username), 'osign' => $username, 'dsign' => $dProfile['userid'],
+						'isign' => $isign, 'position' => $_POST['position'], 'uprofileid' => $p_body['proid'],
+						 'relations' => json_encode($relations, true), 'created' => $date_usernode->format('Y-m-d H:i:s'),
+						  'edited' => $date_usernode->format('Y-m-d H:i:s'));
+					
+					Controller::save($db, 'usernode', $node_body);
+					
+					//updated the node in ascendant mode
+					Util::insert_node_asc($node_body, []);
+					
+					$data = Controller::filter($db, 'profile_dashboard', 'admin');
+					
+					$pdaccount = Controller::find($db, 'profile_subscription_account');
+					
+					$profiles = Controller::find($db, 'profile');
+					
+					$result = array('data' => $data, 'pda' => $pdaccount, 'profiles' => $profiles);
+					return $result;
+					
+				}
+		   }
+
+     }
+
+?>
