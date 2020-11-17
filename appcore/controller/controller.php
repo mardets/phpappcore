@@ -178,47 +178,8 @@
             }
         }
 		
-		public static function uploadMultiple($dir) {
-			foreach ($_FILES["pictures"]["error"] as $key => $error) {
-				if ($error == UPLOAD_ERR_OK) {
-					$tmp_name = $_FILES["pictures"]["tmp_name"][$key];
-					// basename() may prevent filesystem traversal attacks;
-					// further validation/sanitation of the filename may be appropriate
-					$name = basename($_FILES["pictures"]["name"][$key]);
-					move_uploaded_file($tmp_name, "$dir/$name");
-				}
-			}
-		}
 		
-		public static function upload() {
-			$emplacement  = "/assets/img";
-
-	      $file = $emplacement.basename($_FILES["file"]["name"]);
-
-			if (isset($_POST["submit"])) {
-				$check = getimagesize($_FILES["file"]["tmp_name"]);
-				if ($check = false) {
-					echo "File is an image -".check["mine"].".";
-					$uploadok = 1;
-				} else {
-					echo "File is not an image";
-					$uploadok = 0;
-				}
-			}
-
-			if (move_uploaded_file($_FILES["file"]["name"], $file)) {
-				echo "the file".basename($_FILES["file"]["name"]." has uploaded");
-			} else {
-				echo " Error the file has not uploaded try again";
-			}	
-			return basename($_FILES["file"]["name"]);
-		}
 		
-		public static function render($uri, $id) {
-			$url = "$uri$id";
-			header($url);
-			exit;
-		}
 
 
 
